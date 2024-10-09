@@ -1,6 +1,7 @@
 const express = require('express');
 const { port } = require('./config');
 const { handleEvent, sendReminders } = require('./handlers');
+const cron = require('node-cron');
 
 const app = express();
 
@@ -23,8 +24,8 @@ app.post('/webhook', async (req, res) => {
     }
 });
 
-// Schedule reminders to send every day at a specified time
-setInterval(sendReminders, 24 * 60 * 60 * 1000); // Adjust the interval as needed
+// Schedule reminders to send at 18:00 every day
+cron.schedule('0 18 * * *', sendReminders);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
